@@ -37,8 +37,12 @@ Source0: node-v%{nodejs_version}-stripped.tar.gz
 Source1: nodejs_native.attr
 Source2: nodejs_native.req
 
-Patch1: Disable-running-gyp-on-shared-deps.patch
-Patch2: Suppress-NPM-message-to-run-global-update.patch
+Patch0001: Disable-running-gyp-on-shared-deps.patch
+Patch0002: Suppress-NPM-message-to-run-global-update.patch
+#https://github.com/nodejs/node/commit/ee618a7ab239c98d945c723a4e225bc409151736
+Patch0003: CVE-2018-12122.patch
+#https://github.com/nodejs/node/commit/1a7302bd48
+Patch0004: CVE-2019-5737.patch 
 
 BuildRequires: gcc gcc-c++ openssl-devel
 BuildRequires: http-parser-devel
@@ -97,9 +101,7 @@ BuildArch: noarch
 The manual documentation for Nodejs.
 
 %prep
-%setup -q -n node-v%{nodejs_version}
-%patch1 -p1
-%patch2 -p1
+%autosetup -n node-v%{nodejs_version} -p1
 
 pathfix.py -i %{__python2} -pn $(find -type f)
 find . -type f -exec sed -i "s~/usr\/bin\/env python~/usr/bin/python2~" {} \;
@@ -217,5 +219,8 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules:%{buildroot}%{_prefix}/lib/nod
 %doc %{_mandir}/man1/node.1*
 
 %changelog
+* Fri Mar 20 2020 shijian <shijian16@huawei.com> - 1:10.11.0-2
+- Fix CVE-2018-12122 CVE-2019-5737
+
 * Fri Mar  6 2020 openEuler Buildteam <buildteam@openeuler.org> - 1:10.11.0-1
 - Package init
