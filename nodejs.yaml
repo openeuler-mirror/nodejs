@@ -1,0 +1,4 @@
+version-ctrl: github
+src_repo: nodejs/node 
+tag_prefix: ^v
+seperator: .
