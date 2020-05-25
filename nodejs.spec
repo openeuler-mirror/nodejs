@@ -6,7 +6,7 @@
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
-%global nodejs_release 1
+%global nodejs_release 3
 
 %global v8_major 6
 %global v8_minor 8
@@ -219,6 +219,9 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules:%{buildroot}%{_prefix}/lib/nod
 %doc %{_mandir}/man1/node.1*
 
 %changelog
+* Mon May 18 2020 zhouyihang <zhouyihang3@huawei.com> - 1:10.11.0-3
+- Rebuild for nodejs
+
 * Fri Mar 20 2020 shijian <shijian16@huawei.com> - 1:10.11.0-2
 - Fix CVE-2018-12122 CVE-2019-5737
 
