@@ -6,7 +6,7 @@
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
-%global nodejs_release 3
+%global nodejs_release 4
 
 %global v8_major 6
 %global v8_minor 8
@@ -16,7 +16,6 @@
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
 
 %global c_ares_version 1.14.0
-%global libuv_version 1.23.0
 %global nghttp2_version 1.33.0
 %global icu_version 62.1
 %global punycode_version 2.1.0
@@ -46,12 +45,11 @@ Patch0004: CVE-2019-5737.patch
 
 BuildRequires: gcc gcc-c++ openssl-devel
 BuildRequires: http-parser-devel
-BuildRequires: libuv-devel >= 1:%{libuv_version}
 BuildRequires: libnghttp2-devel >= %{nghttp2_version}
 BuildRequires: python2-devel python3-devel zlib-devel
 
 Requires: ca-certificates http-parser >= 2.7.0
-Requires: libuv >= 1:1.20.2 libnghttp2 >= %{nghttp2_version}
+Requires: libnghttp2 >= %{nghttp2_version}
 Requires: npm = %{npm_epoch}:%{npm_version}-%{npm_release}
 
 Provides: nodejs(engine) = %{nodejs_version}
@@ -74,7 +72,7 @@ it executes JavaScript code outside of a browser.
 Summary: JavaScript runtime - development headers
 Requires: %{name} = %{epoch}:%{nodejs_version}-%{nodejs_release}
 Requires: openssl-devel zlib-devel
-Requires: libuv-devel http-parser-devel
+Requires: http-parser-devel
 Requires: nodejs-packaging
 
 %description devel
@@ -132,7 +130,6 @@ export LDFLAGS="%{build_ldflags}"
 ./configure --prefix=%{_prefix} \
            --shared-openssl \
            --shared-zlib \
-           --shared-libuv \
            --shared-http-parser \
            --shared-nghttp2 \
            --with-dtrace \
@@ -219,6 +216,9 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules:%{buildroot}%{_prefix}/lib/nod
 %doc %{_mandir}/man1/node.1*
 
 %changelog
+* Wed Aug 5 2020 hanxinke <hanxinke@huawei.com> -1:10.11.0-4
+- use nodejs-provided libuv library
+
 * Mon May 18 2020 zhouyihang <zhouyihang3@huawei.com> - 1:10.11.0-3
 - Rebuild for nodejs
 
