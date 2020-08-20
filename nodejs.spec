@@ -6,7 +6,7 @@
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
-%global nodejs_release 1
+%global nodejs_release 3
 
 %global v8_major 6
 %global v8_minor 8
@@ -72,7 +72,7 @@ it executes JavaScript code outside of a browser.
 
 %package devel
 Summary: JavaScript runtime - development headers
-Requires: %{name} = %{epoch}:%{nodejs_version}-%{nodejs_release}
+Requires: %{name} = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 Requires: openssl-devel zlib-devel
 Requires: libuv-devel http-parser-devel
 Requires: nodejs-packaging
@@ -219,6 +219,9 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules:%{buildroot}%{_prefix}/lib/nod
 %doc %{_mandir}/man1/node.1*
 
 %changelog
+* Thu Aug 20 2020 wutao <wutao61@huawei.com> - 1:10.11.0-3
+- fix dist miss problem
+
 * Fri Mar 20 2020 shijian <shijian16@huawei.com> - 1:10.11.0-2
 - Fix CVE-2018-12122 CVE-2019-5737
 
