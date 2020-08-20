@@ -72,7 +72,7 @@ it executes JavaScript code outside of a browser.
 
 %package devel
 Summary: JavaScript runtime - development headers
-Requires: %{name} = %{epoch}:%{nodejs_version}-%{nodejs_release}%{dist}
+Requires: %{name} = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 Requires: openssl-devel zlib-devel
 Requires: libuv-devel http-parser-devel
 Requires: nodejs-packaging
