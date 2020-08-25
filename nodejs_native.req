@@ -1,3 +1,0 @@
-#!/usr/bin/sh
-echo 'nodejs(abi10) >= 10.11'
-echo 'nodejs(v8-abi6) >= 6.8'
