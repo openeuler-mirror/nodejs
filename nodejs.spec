@@ -1,285 +1,154 @@
-%bcond_with bootstrap
-%global baserelease 1
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
+
 %global nodejs_epoch 1
-%global nodejs_major 12
-%global nodejs_minor 18
-%global nodejs_patch 3
+%global nodejs_major 10
+%global nodejs_minor 11
+%global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
-%global nodejs_soversion 72
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
-%global nodejs_release %{baserelease}
-%global nodejs_datadir %{_datarootdir}/nodejs
-%global v8_epoch 2
-%global v8_major 7
+%global nodejs_release 3
+
+%global v8_major 6
 %global v8_minor 8
-%global v8_build 279
-%global v8_patch 23
+%global v8_build 275
+%global v8_patch 32
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
-%global v8_release %{nodejs_epoch}.%{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}.%{nodejs_release}
-%global c_ares_major 1
-%global c_ares_minor 16
-%global c_ares_patch 0
-%global c_ares_version %{c_ares_major}.%{c_ares_minor}.%{c_ares_patch}
-%global http_parser_major 2
-%global http_parser_minor 9
-%global http_parser_patch 3
-%global http_parser_version %{http_parser_major}.%{http_parser_minor}.%{http_parser_patch}
-%global llhttp_major 2
-%global llhttp_minor 0
-%global llhttp_patch 4
-%global llhttp_version %{llhttp_major}.%{llhttp_minor}.%{llhttp_patch}
-%global libuv_major 1
-%global libuv_minor 38
-%global libuv_patch 0
-%global libuv_version %{libuv_major}.%{libuv_minor}.%{libuv_patch}
-%global nghttp2_major 1
-%global nghttp2_minor 41
-%global nghttp2_patch 0
-%global nghttp2_version %{nghttp2_major}.%{nghttp2_minor}.%{nghttp2_patch}
-%global icu_major 67
-%global icu_minor 1
-%global icu_version %{icu_major}.%{icu_minor}
-%global icudatadir %{nodejs_datadir}/icudata
-%{!?little_endian: %global little_endian %(%{__python3} -c "import sys;print (0 if sys.byteorder=='big' else 1)")}
-%global openssl_minimum 1:1.1.1
-%global punycode_major 2
-%global punycode_minor 1
-%global punycode_patch 0
-%global punycode_version %{punycode_major}.%{punycode_minor}.%{punycode_patch}
+
+%global c_ares_version 1.14.0
+%global libuv_version 1.23.0
+%global nghttp2_version 1.33.0
+%global icu_version 62.1
+%global punycode_version 2.1.0
+
 %global npm_epoch 1
-%global npm_major 6
-%global npm_minor 14
-%global npm_patch 6
-%global npm_version %{npm_major}.%{npm_minor}.%{npm_patch}
-%global uvwasi_major 0
-%global uvwasi_minor 0
-%global uvwasi_patch 9
-%global uvwasi_version %{uvwasi_major}.%{uvwasi_minor}.%{uvwasi_patch}
-%global histogram_major 0
-%global histogram_minor 9
-%global histogram_patch 7
-%global histogram_version %{histogram_major}.%{histogram_minor}.%{histogram_patch}
-%global npm_release %{nodejs_epoch}.%{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}.%{nodejs_release}
-Name:                nodejs
-Epoch:               %{nodejs_epoch}
-Version:             %{nodejs_version}
-Release:             1
-Summary:             JavaScript runtime
-License:             MIT and ASL 2.0 and ISC and BSD
-URL:                 http://nodejs.org/
-Source0:             https://nodejs.org/dist/v%{nodejs_version}/node-v%{nodejs_version}.tar.gz
-Source1:             npmrc
-Source2:             btest402.js
-Source3:             https://github.com/unicode-org/icu/releases/download/release-%{icu_major}-%{icu_minor}/icu4c-%{icu_major}_%{icu_minor}-src.tgz
-Source7:             nodejs_native.attr
-Patch1:              0001-Disable-running-gyp-on-shared-deps.patch
-Patch2:              0002-Install-both-binaries-and-use-libdir.patch
-BuildRequires:       python3-devel zlib-devel brotli-devel gcc >= 6.3.0 gcc-c++ >= 6.3.0
-BuildRequires:       nodejs-packaging chrpath libatomic
-%if %{with bootstrap}
-Provides:            bundled(http-parser) = %{http_parser_version}
-Provides:            bundled(libuv) = %{libuv_version}
-Provides:            bundled(nghttp2) = %{nghttp2_version}
-%else
-BuildRequires:       systemtap-sdt-devel libuv-devel >= 1:%{libuv_version}
-Requires:            libuv >= 1:%{libuv_version}
-BuildRequires:       libnghttp2-devel >= %{nghttp2_version}
-Requires:            libnghttp2 >= %{nghttp2_version}
-Provides:            bundled(http-parser) = %{http_parser_version}
-Provides:            bundled(llhttp) = %{llhttp_version}
-%endif
-BuildRequires:       openssl-devel >= %{openssl_minimum}
-Requires:            openssl >= %{openssl_minimum}
-Requires:            ca-certificates
-Requires:            nodejs-libs%{?_isa} = %{nodejs_epoch}:%{version}-%{release}
-Recommends:          nodejs-full-i18n%{?_isa} = %{nodejs_epoch}:%{version}-%{release}
-Provides:            nodejs(abi) = %{nodejs_abi}
-Provides:            nodejs(abi%{nodejs_major}) = %{nodejs_abi}
-Provides:            nodejs(v8-abi) = %{v8_abi}
-Provides:            nodejs(v8-abi%{v8_major}) = %{v8_abi}
-Provides:            nodejs(engine) = %{nodejs_version}
-Conflicts:           node <= 0.3.2-12
-Provides:            nodejs-punycode = %{punycode_version}
-Provides:            npm(punycode) = %{punycode_version}
-Provides:            bundled(c-ares) = %{c_ares_version}
-Provides:            bundled(v8) = %{v8_version}
-Provides:            bundled(icu) = %{icu_version}
-Provides:            bundled(uvwasi) = %{uvwasi_version}
-Provides:            bundled(histogram) = %{histogram_version}
-Requires:            (nodejs-packaging if rpm-build)
-Recommends:          npm >= %{npm_epoch}:%{npm_version}-%{npm_release}%{?dist}
+%global npm_version 6.4.1
+%global npm_release 1.10.11.0.1
+
+Name: nodejs
+Epoch: %{nodejs_epoch}
+Version: %{nodejs_version}
+Release: %{nodejs_release}
+Summary: JavaScript runtime
+License: MIT and ASL 2.0 and ISC and BSD
+URL: http://nodejs.org/
+
+Source0: node-v%{nodejs_version}-stripped.tar.gz
+Source1: nodejs_native.attr
+Source2: nodejs_native.req
+
+Patch0001: Disable-running-gyp-on-shared-deps.patch
+Patch0002: Suppress-NPM-message-to-run-global-update.patch
+#https://github.com/nodejs/node/commit/ee618a7ab239c98d945c723a4e225bc409151736
+Patch0003: CVE-2018-12122.patch
+#https://github.com/nodejs/node/commit/1a7302bd48
+Patch0004: CVE-2019-5737.patch 
+
+BuildRequires: gcc gcc-c++ openssl-devel
+BuildRequires: http-parser-devel
+BuildRequires: libuv-devel >= 1:%{libuv_version}
+BuildRequires: libnghttp2-devel >= %{nghttp2_version}
+BuildRequires: python2-devel python3-devel zlib-devel
+
+Requires: ca-certificates http-parser >= 2.7.0
+Requires: libuv >= 1:1.20.2 libnghttp2 >= %{nghttp2_version}
+Requires: npm = %{npm_epoch}:%{npm_version}-%{npm_release}
+
+Provides: nodejs(engine) = %{nodejs_version}
+Provides: bundled(v8) = %{v8_version}
+Provides: bundled(icu) = %{icu_version}
+Provides: nodejs(abi) = %{nodejs_abi}
+Provides: nodejs-punycode = %{punycode_version}
+Provides: nodejs(v8-abi%{v8_major}) = %{v8_abi}
+Provides: npm(punycode) = %{punycode_version}
+Provides: bundled(c-ares) = %{c_ares_version}
+Provides: nodejs(abi%{nodejs_major}) = %{nodejs_abi}
+Provides: nodejs(v8-abi) = %{v8_abi}
+Conflicts: node <= 0.3.2-12
+
 %description
-Node.js is a platform built on Chrome's JavaScript runtime
-for easily building fast, scalable network applications.
-Node.js uses an event-driven, non-blocking I/O model that
-makes it lightweight and efficient, perfect for data-intensive
-real-time applications that run across distributed devices.
+Node.js is an open-source, cross-platform, JavaScript runtime environment,
+it executes JavaScript code outside of a browser.
 
 %package devel
-Summary:             JavaScript runtime - development headers
-Requires:            %{name}%{?_isa} = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
-Requires:            openssl-devel%{?_isa} zlib-devel%{?_isa} brotli-devel%{?_isa} nodejs-packaging
-%if %{with bootstrap}
-%else
-Requires:            libuv-devel%{?_isa}
-%endif
+Summary: JavaScript runtime - development headers
+Requires: %{name} = %{epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
+Requires: openssl-devel zlib-devel
+Requires: libuv-devel http-parser-devel
+Requires: nodejs-packaging
+
 %description devel
-Development headers for the Node.js JavaScript runtime.
-
-%package libs
-Summary:             Node.js and v8 libraries
-%if 0%{?__isa_bits} == 64
-Provides:            libv8.so.%{v8_major}()(64bit)
-Provides:            libv8_libbase.so.%{v8_major}()(64bit)
-Provides:            libv8_libplatform.so.%{v8_major}()(64bit)
-%else
-Provides:            libv8.so.%{v8_major}
-Provides:            libv8_libbase.so.%{v8_major}
-Provides:            libv8_libplatform.so.%{v8_major}
-%endif
-Provides:            v8 = %{v8_epoch}:%{v8_version}-%{nodejs_release}%{?dist}
-Provides:            v8%{?_isa} = %{v8_epoch}:%{v8_version}-%{nodejs_release}%{?dist}
-Obsoletes:           v8 < 1:6.7.17-10
-%description libs
-Libraries to support Node.js and provide stable v8 interfaces.
-
-%package full-i18n
-Summary:             Non-English locale data for Node.js
-Requires:            %{name}%{?_isa} = %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
-%description full-i18n
-Optional data files to provide full-icu support for Node.js. Remove this
-package to save space if non-English locales are not needed.
-
-%package -n v8-devel
-Summary:             v8 - development headers
-Epoch:               %{v8_epoch}
-Version:             %{v8_version}
-Release:             %{v8_release}%{?dist}
-Requires:            %{name}-devel%{?_isa} = %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
-%description -n v8-devel
-Development headers for the v8 runtime.
+Development headers for the Nodejs.
 
 %package -n npm
-Summary:             Node.js Package Manager
-Epoch:               %{npm_epoch}
-Version:             %{npm_version}
-Release:             %{npm_release}%{?dist}
-Obsoletes:           npm < 0:3.5.4-6
-Provides:            npm = %{npm_epoch}:%{npm_version}
-Requires:            nodejs = %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
-Recommends:          nodejs-docs = %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
-Provides:            npm(npm) = %{npm_version}
-%description -n npm
-npm is a package manager for node.js. You can use it to install and publish
-your node programs. It manages dependencies and does other cool stuff.
+Summary: Node.js Package Manager
+Epoch: %{npm_epoch}
+Version: %{npm_version}
+Release: %{npm_release}
 
-%package docs
-Summary:             Node.js API documentation
-BuildArch:           noarch
-Conflicts:           %{name} > %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
-Conflicts:           %{name} < %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
-%description docs
-The API documentation for the Node.js JavaScript runtime.
+Provides: npm = %{npm_epoch}:%{npm_version}
+Provides: npm(npm) = %{npm_version}
+Obsoletes: npm < 0:3.5.4-6
+
+%description -n npm
+npm is a package manager for node.js.
+
+%package help
+Summary: Nodejs documentation
+BuildArch: noarch
+
+%description help
+The manual documentation for Nodejs.
 
 %prep
-%autosetup -p1 -n node-v%{nodejs_version}
-rm -rf deps/zlib
-rm -rf deps/brotli
-rm -rf deps/openssl
-pathfix.py -i %{__python3} -pn $(find -type f ! -name "*.js")
-find . -type f -exec sed -i "s~/usr\/bin\/env python~/usr/bin/python3~" {} \;
-find . -type f -exec sed -i "s~/usr\/bin\/python\W~/usr/bin/python3~" {} \;
-sed -i "s~python~python3~" $(find . -type f | grep "gyp$")
+%autosetup -n node-v%{nodejs_version} -p1
+
+pathfix.py -i %{__python2} -pn $(find -type f)
+find . -type f -exec sed -i "s~/usr\/bin\/env python~/usr/bin/python2~" {} \;
+find . -type f -exec sed -i "s~/usr\/bin\/python\W~/usr/bin/python2~" {} \;
+sed -i "s~python~python2~" $(find . -type f | grep "gyp$")
 sed -i "s~usr\/bin\/python2~usr\/bin\/python3~" ./deps/v8/tools/gen-inlining-tests.py
-sed -i "s~usr\/bin\/python.*$~usr\/bin\/python3~" ./deps/v8/tools/mb/mb_unittest.py
-find . -type f -exec sed -i "s~python -c~python3 -c~" {} \;
+sed -i "s~usr\/bin\/python.*$~usr\/bin\/python2~" ./deps/v8/tools/mb/mb_unittest.py
+find . -type f -exec sed -i "s~python -c~python2 -c~" {} \;
+sed -i "s~which('python')~which('python2')~" configure
 
 %build
-%define _lto_cflags %{nil}
-%ifarch s390 s390x %{arm} %ix86
-%global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
-%endif
-export CC='%{__cc}'
-export CXX='%{__cxx}'
-export CFLAGS='%{optflags} \
+
+export CFLAGS='%{optflags} -g \
                -D_LARGEFILE_SOURCE \
                -D_FILE_OFFSET_BITS=64 \
                -DZLIB_CONST \
                -fno-delete-null-pointer-checks'
-export CXXFLAGS='%{optflags} \
+export CXXFLAGS='%{optflags} -g \
                  -D_LARGEFILE_SOURCE \
                  -D_FILE_OFFSET_BITS=64 \
                  -DZLIB_CONST \
                  -fno-delete-null-pointer-checks'
+
 export CFLAGS="$(echo ${CFLAGS} | tr '\n\\' '  ')"
 export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 export LDFLAGS="%{build_ldflags}"
-%if %{with bootstrap}
-%{__python3} configure.py --prefix=%{_prefix} \
-           --shared \
-           --libdir=%{_lib} \
+
+./configure --prefix=%{_prefix} \
            --shared-openssl \
            --shared-zlib \
-           --shared-brotli \
-           --without-dtrace \
-           --with-intl=small-icu \
-           --debug-nghttp2 \
-           --openssl-use-def-ca-store
-%else
-%{__python3} configure.py --prefix=%{_prefix} \
-           --shared \
-           --libdir=%{_lib} \
-           --shared-openssl \
-           --shared-zlib \
-           --shared-brotli \
            --shared-libuv \
+           --shared-http-parser \
            --shared-nghttp2 \
            --with-dtrace \
            --with-intl=small-icu \
-           --with-icu-default-data-dir=%{icudatadir} \
            --debug-nghttp2 \
            --openssl-use-def-ca-store
-%endif
+
 make BUILDTYPE=Release %{?_smp_mflags}
-pushd deps/
-tar xfz %SOURCE3
-pushd icu/source
-mkdir -p converted
-%if 0%{?little_endian}
-install -Dpm0644 data/in/icudt%{icu_major}l.dat converted/
-%else
-mkdir -p data/out/tmp
-%configure
-%make_build
-icu_root=$(pwd)
-LD_LIBRARY_PATH=./lib ./bin/icupkg -tb data/in/icudt%{icu_major}l.dat \
-                                       converted/icudt%{icu_major}b.dat
-%endif
-popd # icu/source
-popd # deps
 
 %install
 rm -rf %{buildroot}
 ./tools/install.py install %{buildroot} %{_prefix}
 chmod 0755 %{buildroot}/%{_bindir}/node
-chrpath --delete %{buildroot}%{_bindir}/node
-ln -s libnode.so.%{nodejs_soversion} %{buildroot}%{_libdir}/libnode.so
-for header in %{buildroot}%{_includedir}/node/libplatform %{buildroot}%{_includedir}/node/v8*.h; do
-    header=$(basename ${header})
-    ln -s %{_includedir}/node/${header} %{buildroot}%{_includedir}/${header}
-done
-for soname in libv8 libv8_libbase libv8_libplatform; do
-    ln -s libnode.so.%{nodejs_soversion} %{buildroot}%{_libdir}/${soname}.so
-    ln -s libnode.so.%{nodejs_soversion} %{buildroot}%{_libdir}/${soname}.so.%{v8_major}
-done
 mkdir -p %{buildroot}%{_prefix}/lib/node_modules
-install -Dpm0644 %{SOURCE7} %{buildroot}%{_rpmconfigdir}/fileattrs/nodejs_native.attr
-cat << EOF > %{buildroot}%{_rpmconfigdir}/nodejs_native.req
-echo 'nodejs(abi%{nodejs_major}) >= %nodejs_abi'
-echo 'nodejs(v8-abi%{v8_major}) >= %v8_abi'
-EOF
+install -Dpm0644 %{SOURCE1} %{buildroot}%{_rpmconfigdir}/fileattrs/nodejs_native.attr
+install -Dpm0644 %{SOURCE2} %{buildroot}%{_rpmconfigdir}/nodejs_native.req
 chmod 0755 %{buildroot}%{_rpmconfigdir}/nodejs_native.req
 mkdir -p %{buildroot}%{_pkgdocdir}/html
 cp -pr doc/* %{buildroot}%{_pkgdocdir}/html
@@ -287,148 +156,69 @@ rm -f %{buildroot}%{_pkgdocdir}/html/nodejs.1
 mkdir -p %{buildroot}%{_datadir}/node
 cp -p common.gypi %{buildroot}%{_datadir}/node
 mv %{buildroot}/%{_datadir}/doc/node/gdbinit %{buildroot}/%{_pkgdocdir}/gdbinit
-mkdir -p %{buildroot}%{_mandir} \
-         %{buildroot}%{_pkgdocdir}/npm
+mkdir -p %{buildroot}%{_mandir} %{buildroot}%{_pkgdocdir}/npm
 cp -pr deps/npm/man/* %{buildroot}%{_mandir}/
 rm -rf %{buildroot}%{_prefix}/lib/node_modules/npm/man
 ln -sf %{_mandir}  %{buildroot}%{_prefix}/lib/node_modules/npm/man
-cp -pr deps/npm/docs %{buildroot}%{_pkgdocdir}/npm/
-rm -rf %{buildroot}%{_prefix}/lib/node_modules/npm/docs
-ln -sf %{_pkgdocdir}/npm %{buildroot}%{_prefix}/lib/node_modules/npm/docs
-rm -f %{buildroot}/%{_defaultdocdir}/node/lldb_commands.py \
-      %{buildroot}/%{_defaultdocdir}/node/lldbinit
+cp -pr deps/npm/html deps/npm/doc %{buildroot}%{_pkgdocdir}/npm/
+rm -rf %{buildroot}%{_prefix}/lib/node_modules/npm/html
+rm -rf %{buildroot}%{_prefix}/lib/node_modules/npm/doc
+ln -sf %{_pkgdocdir} %{buildroot}%{_prefix}/lib/node_modules/npm/html
+ln -sf %{_pkgdocdir}/npm/html %{buildroot}%{_prefix}/lib/node_modules/npm/doc
+rm -f %{buildroot}/%{_defaultdocdir}/node/lldb_commands.py
+rm -f %{buildroot}/%{_defaultdocdir}/node/lldbinit
+
 find %{buildroot}%{_prefix}/lib/node_modules/npm \
     -not -path "%{buildroot}%{_prefix}/lib/node_modules/npm/bin/*" \
     -executable -type f \
     -exec chmod -x {} \;
-chmod 0755 %{buildroot}%{_prefix}/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin/node-gyp
-chmod 0755 %{buildroot}%{_prefix}/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js
-mkdir -p %{buildroot}%{_sysconfdir}
-cp %{SOURCE1} %{buildroot}%{_sysconfdir}/npmrc
-mkdir -p %{buildroot}%{_prefix}/etc
-ln -s %{_sysconfdir}/npmrc %{buildroot}%{_prefix}/etc/npmrc
-install -Dpm0644 -t %{buildroot}%{icudatadir} deps/icu/source/converted/*
 
 %check
-LD_LIBRARY_PATH=%{buildroot}%{_libdir} %{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.node, '%{nodejs_version}')"
-LD_LIBRARY_PATH=%{buildroot}%{_libdir} %{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.v8.replace(/-node\.\d+$/, ''), '%{v8_version}')"
-LD_LIBRARY_PATH=%{buildroot}%{_libdir} %{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.ares.replace(/-DEV$/, ''), '%{c_ares_version}')"
-LD_LIBRARY_PATH=%{buildroot}%{_libdir} %{buildroot}/%{_bindir}/node -e "require(\"assert\").equal(require(\"punycode\").version, '%{punycode_version}')"
-NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules:%{buildroot}%{_prefix}/lib/node_modules/npm/node_modules LD_LIBRARY_PATH=%{buildroot}%{_libdir} %{buildroot}/%{_bindir}/node -e "require(\"assert\").equal(require(\"npm\").version, '%{npm_version}')"
-NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules:%{buildroot}%{_prefix}/lib/node_modules/npm/node_modules LD_LIBRARY_PATH=%{buildroot}%{_libdir} %{buildroot}/%{_bindir}/node --icu-data-dir=%{buildroot}%{icudatadir} %{SOURCE2}
-
-%pretrans -n npm -p <lua>
--- Replace the npm man directory with a symlink
--- Drop this scriptlet when F31 is EOL
-path = "%{_prefix}/lib/node_modules/npm/man"
-st = posix.stat(path)
-if st and st.type == "directory" then
-  status = os.rename(path, path .. ".rpmmoved")
-  if not status then
-    suffix = 0
-    while not status do
-      suffix = suffix + 1
-      status = os.rename(path .. ".rpmmoved", path .. ".rpmmoved." .. suffix)
-    end
-    os.rename(path, path .. ".rpmmoved")
-  end
-end
-
-%pretrans -n v8-devel -p <lua>
--- Replace the v8 libplatform include directory with a symlink
--- Drop this scriptlet when F30 is EOL
-path = "%{_includedir}/libplatform"
-st = posix.stat(path)
-if st and st.type == "directory" then
-  status = os.rename(path, path .. ".rpmmoved")
-  if not status then
-    suffix = 0
-    while not status do
-      suffix = suffix + 1
-      status = os.rename(path .. ".rpmmoved", path .. ".rpmmoved." .. suffix)
-    end
-    os.rename(path, path .. ".rpmmoved")
-  end
-end
+%{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.node, '%{nodejs_version}')"
+%{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.v8.replace(/-node\.\d+$/, ''), '%{v8_version}')"
+%{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.ares.replace(/-DEV$/, ''), '%{c_ares_version}')"
+%{buildroot}/%{_bindir}/node -e "require(\"assert\").equal(require(\"punycode\").version, '%{punycode_version}')"
+NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules:%{buildroot}%{_prefix}/lib/node_modules/npm/node_modules %{buildroot}/%{_bindir}/node -e "require(\"assert\").equal(require(\"npm\").version, '%{npm_version}')"
 
 %files
 %{_bindir}/node
 %dir %{_prefix}/lib/node_modules
 %dir %{_datadir}/node
-%dir %{_datadir}/systemtap
-%dir %{_datadir}/systemtap/tapset
-%{_datadir}/systemtap/tapset/node.stp
-%if %{with bootstrap}
-%else
 %dir %{_usr}/lib/dtrace
 %{_usr}/lib/dtrace/node.d
-%endif
+%dir %{_datadir}/systemtap/tapset
+%{_datadir}/systemtap/tapset/node.stp
 %{_rpmconfigdir}/fileattrs/nodejs_native.attr
 %{_rpmconfigdir}/nodejs_native.req
-%doc AUTHORS CHANGELOG.md onboarding.md GOVERNANCE.md README.md
-%doc %{_mandir}/man1/node.1*
+%license LICENSE
+%doc AUTHORS CHANGELOG.md COLLABORATOR_GUIDE.md GOVERNANCE.md README.md
 
 %files devel
 %{_includedir}/node
-%{_libdir}/libnode.so
 %{_datadir}/node/common.gypi
 %{_pkgdocdir}/gdbinit
-
-%files full-i18n
-%dir %{icudatadir}
-%{icudatadir}/icudt%{icu_major}*.dat
-
-%files libs
-%license LICENSE
-%{_libdir}/libnode.so.%{nodejs_soversion}
-%{_libdir}/libv8.so.%{v8_major}
-%{_libdir}/libv8_libbase.so.%{v8_major}
-%{_libdir}/libv8_libplatform.so.%{v8_major}
-%dir %{nodejs_datadir}/
-
-%files -n v8-devel
-%{_includedir}/libplatform
-%{_includedir}/v8*.h
-%{_libdir}/libv8.so
-%{_libdir}/libv8_libbase.so
-%{_libdir}/libv8_libplatform.so
-%ghost %{_includedir}/libplatform.rpmmoved
 
 %files -n npm
 %{_bindir}/npm
 %{_bindir}/npx
 %{_prefix}/lib/node_modules/npm
-%config(noreplace) %{_sysconfdir}/npmrc
-%{_prefix}/etc/npmrc
+%ghost %{_sysconfdir}/npmrc
 %ghost %{_sysconfdir}/npmignore
-%doc %{_mandir}/man1/npm*.1*
-%doc %{_mandir}/man1/npx.1*
-%doc %{_mandir}/man5/folders.5*
-%doc %{_mandir}/man5/install.5*
-%doc %{_mandir}/man5/npmrc.5*
-%doc %{_mandir}/man5/package-json.5*
-%doc %{_mandir}/man5/package-lock-json.5*
-%doc %{_mandir}/man5/package-locks.5*
-%doc %{_mandir}/man5/shrinkwrap-json.5*
-%doc %{_mandir}/man7/config.7*
-%doc %{_mandir}/man7/developers.7*
-%doc %{_mandir}/man7/disputes.7*
-%doc %{_mandir}/man7/orgs.7*
-%doc %{_mandir}/man7/registry.7*
-%doc %{_mandir}/man7/removal.7*
-%doc %{_mandir}/man7/scope.7*
-%doc %{_mandir}/man7/scripts.7*
+%doc %{_mandir}/man*/npm*
+%doc %{_mandir}/man*/npx*
+%doc %{_mandir}/man5/package.json.5*
+%doc %{_mandir}/man5/package-lock.json.5*
+%doc %{_mandir}/man7/removing-npm.7*
 %doc %{_mandir}/man7/semver.7*
 
-%files docs
+%files help
 %dir %{_pkgdocdir}
 %{_pkgdocdir}/html
-%{_pkgdocdir}/npm/docs
+%{_pkgdocdir}/npm/html
+%{_pkgdocdir}/npm/doc
+%doc %{_mandir}/man1/node.1*
 
 %changelog
-* Tue Aug 18 2020 zhangjiapeng <zhangjiapeng9@huawei.com> - 1:12.18.3-1
-- Update to 12.18.3
-
 * Thu Aug 20 2020 wutao <wutao61@huawei.com> - 1:10.11.0-3
 - fix dist miss problem
 
