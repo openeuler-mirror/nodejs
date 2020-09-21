@@ -6,7 +6,7 @@
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
-%global nodejs_release 3
+%global nodejs_release 4
 
 %global v8_major 6
 %global v8_minor 8
@@ -43,6 +43,8 @@ Patch0002: Suppress-NPM-message-to-run-global-update.patch
 Patch0003: CVE-2018-12122.patch
 #https://github.com/nodejs/node/commit/1a7302bd48
 Patch0004: CVE-2019-5737.patch 
+Patch0005: CVE-2018-12121.patch
+Patch0006: CVE-2018-12123.patch
 
 BuildRequires: gcc gcc-c++ openssl-devel
 BuildRequires: http-parser-devel
@@ -219,6 +221,9 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules:%{buildroot}%{_prefix}/lib/nod
 %doc %{_mandir}/man1/node.1*
 
 %changelog
+* Sun Sep 20 2020 zhangtao <zhangtao221@huawei.com> - 1:10.11.0-4
+- Fix CVE-2018-12121 CVE-2018-12123
+
 * Thu Aug 20 2020 wutao <wutao61@huawei.com> - 1:10.11.0-3
 - fix dist miss problem
 
