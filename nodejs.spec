@@ -1,5 +1,5 @@
 %bcond_with bootstrap
-%global baserelease 1
+%global baserelease 2
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global nodejs_epoch 1
 %global nodejs_major 10
@@ -72,6 +72,7 @@ Source7: nodejs_native.attr
 Patch1: 0001-Disable-running-gyp-on-shared-deps.patch
 Patch2: 0002-Install-both-binaries-and-use-libdir.patch
 Patch3: 0003-build-auto-load-ICU-data-from-with-icu-default-data-.patch
+Patch4: 0004-src-avoid-OOB-read-in-URL-parser.patch
 
 BuildRequires: python2-devel python3-devel zlib-devel gcc >= 6.3.0
 BuildRequires: gcc-c++ >= 6.3.0 nodejs-packaging chrpath libatomic
@@ -455,6 +456,9 @@ end
 
 
 %changelog
+* Wed Nov 04 2020 gaozhekang <gaozhekang@huawei.com> - 1:10.21.0-2
+- avoid OOB read in URL parser
+
 * Wed Oct 14 2020 Jeffery.Gao <gaojianxing@huawei.com> - 1:10.21.0-1
 - Update to 10.21.0
 
