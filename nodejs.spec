@@ -6,7 +6,7 @@
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
-%global nodejs_release 6
+%global nodejs_release 7
 
 %global v8_major 6
 %global v8_minor 8
@@ -44,6 +44,7 @@ Patch0003: CVE-2018-12122.patch
 Patch0004: CVE-2019-5737.patch 
 Patch0005: CVE-2018-12121.patch
 Patch0006: CVE-2018-12123.patch
+Patch0007: src-avoid-OOB-read-in-URL-parser.patch
 
 BuildRequires: gcc gcc-c++ openssl-devel
 BuildRequires: http-parser-devel
@@ -218,6 +219,9 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules:%{buildroot}%{_prefix}/lib/nod
 %doc %{_mandir}/man1/node.1*
 
 %changelog
+* Wed Nov 04 2020 gaozhekang <gaozhekang@huawei.com> - 1:10.11.0-7
+- avoid OOB read in URL parser
+
 * Sun Sep 20 2020 zhangtao <zhangtao221@huawei.com> - 1:10.11.0-6
 - Fix CVE-2018-12121 CVE-2018-12123
 
