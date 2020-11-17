@@ -1,5 +1,5 @@
 %bcond_with bootstrap
-%global baserelease 1
+%global baserelease 3
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global nodejs_epoch 1
 %global nodejs_major 10
@@ -57,7 +57,7 @@
 Name: nodejs
 Epoch: %{nodejs_epoch}
 Version: %{nodejs_version}
-Release: 2
+Release: %{nodejs_release}
 Summary: JavaScript runtime
 License: MIT and ASL 2.0 and ISC and BSD
 Group: Development/Languages
@@ -456,6 +456,9 @@ end
 
 
 %changelog
+* Tue Nov 17 2020 lingsheng <lingsheng@huawei.com> - 1:10.21.0-3
+- Fix nodejs release version
+
 * Wed Nov 04 2020 gaozhekang <gaozhekang@huawei.com> - 1:10.21.0-2
 - avoid OOB read in URL parser
 
