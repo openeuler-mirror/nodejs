@@ -1,7 +1,7 @@
-From 8828c8fdc98f310a718a65ebc47d8a163e41b0cb Mon Sep 17 00:00:00 2001
+From 11512edeb046b64be4daca76f061a3a918251ee0 Mon Sep 17 00:00:00 2001
 From: Elliott Sales de Andrade <quantum.analyst@gmail.com>
 Date: Tue, 19 Mar 2019 23:22:40 -0400
-Subject: [PATCH 2/3] Install both binaries and use libdir.
+Subject: [PATCH 2/2] Install both binaries and use libdir.
 
 This allows us to build with a shared library for other users while
 still providing the normal executable.
@@ -13,10 +13,10 @@ Signed-off-by: Elliott Sales de Andrade <quantum.analyst@gmail.com>
  2 files changed, 20 insertions(+), 16 deletions(-)
 
 diff --git a/configure.py b/configure.py
-index 22861a10eeac54cae69fc1be4b9aef7ed5106a35..48389fbdcb57cbf8d9c11d4921c65f34a1937cc7 100755
+index 6537a62d3954d83927c698db3fb80c9fc05faba7..b9a894bec9e5fd954004bcb423822ca984066dc5 100755
 --- a/configure.py
 +++ b/configure.py
-@@ -552,6 +552,12 @@ parser.add_option('--shared',
+@@ -571,6 +571,12 @@ parser.add_option('--shared',
      help='compile shared library for embedding node in another project. ' +
           '(This mode is not officially supported for regular applications)')
  
@@ -29,19 +29,19 @@ index 22861a10eeac54cae69fc1be4b9aef7ed5106a35..48389fbdcb57cbf8d9c11d4921c65f34
  parser.add_option('--without-v8-platform',
      action='store_true',
      dest='without_v8_platform',
-@@ -1095,6 +1101,7 @@ def configure_node(o):
-   if options.code_cache_path:
-     o['variables']['node_code_cache_path'] = options.code_cache_path
+@@ -1105,6 +1111,7 @@ def configure_node(o):
+   o['variables']['node_no_browser_globals'] = b(options.no_browser_globals)
+ 
    o['variables']['node_shared'] = b(options.shared)
 +  o['variables']['libdir'] = options.libdir
    node_module_version = getmoduleversion.get_version()
  
-   if sys.platform == 'darwin':
+   if options.dest_os == 'android':
 diff --git a/tools/install.py b/tools/install.py
-index 028c32ecbbdf9625238dfcc2baef66df9408b539..bf443c4d15a3b3ebf1e10a5dd802e9c5999691e5 100755
+index 655802980a6ea94d1d4ca1dc63c8c8e905fbb83a..fe4723bf15012c8aacacb0393dc8294c049b0503 100755
 --- a/tools/install.py
 +++ b/tools/install.py
-@@ -117,26 +117,23 @@ def subdir_files(path, dest, action):
+@@ -121,26 +121,23 @@ def subdir_files(path, dest, action):
  
  def files(action):
    is_windows = sys.platform == 'win32'

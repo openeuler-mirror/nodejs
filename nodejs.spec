@@ -1,44 +1,50 @@
 %bcond_with bootstrap
-%global baserelease 3
+%global baserelease 1
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global nodejs_epoch 1
-%global nodejs_major 10
-%global nodejs_minor 21
-%global nodejs_patch 0
+%global nodejs_major 12
+%global nodejs_minor 18
+%global nodejs_patch 4
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
-%global nodejs_soversion 64
+%global nodejs_soversion 72
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
 %global nodejs_release %{baserelease}
 %global nodejs_datadir %{_datarootdir}/nodejs
-%global v8_epoch 1
-%global v8_major 6
+%global v8_epoch 2
+%global v8_major 7
 %global v8_minor 8
-%global v8_build 275
-%global v8_patch 32
+%global v8_build 279
+%global v8_patch 23
 %global v8_abi %{v8_major}.%{v8_minor}
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
 %global v8_release %{nodejs_epoch}.%{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}.%{nodejs_release}
 %global c_ares_major 1
-%global c_ares_minor 15
+%global c_ares_minor 16
 %global c_ares_patch 0
 %global c_ares_version %{c_ares_major}.%{c_ares_minor}.%{c_ares_patch}
 %global http_parser_major 2
 %global http_parser_minor 9
 %global http_parser_patch 3
 %global http_parser_version %{http_parser_major}.%{http_parser_minor}.%{http_parser_patch}
+%global llhttp_major 2
+%global llhttp_minor 1
+%global llhttp_patch 2
+%global llhttp_version %{llhttp_major}.%{llhttp_minor}.%{llhttp_patch}
 %global libuv_major 1
-%global libuv_minor 34
-%global libuv_patch 2
+%global libuv_minor 38
+%global libuv_patch 0
 %global libuv_version %{libuv_major}.%{libuv_minor}.%{libuv_patch}
 %global nghttp2_major 1
 %global nghttp2_minor 41
 %global nghttp2_patch 0
 %global nghttp2_version %{nghttp2_major}.%{nghttp2_minor}.%{nghttp2_patch}
-%global icu_major 64
-%global icu_minor 2
+%global icu_major 67
+%global icu_minor 1
 %global icu_version %{icu_major}.%{icu_minor}
 %global icudatadir %{nodejs_datadir}/icudata
 %{!?little_endian: %global little_endian %(%{__python3} -c "import sys;print (0 if sys.byteorder=='big' else 1)")}
+# " this line just fixes syntax highlighting for vim that is confused by the above and continues literal
+%global openssl_minimum 1:1.1.1
 %global punycode_major 2
 %global punycode_minor 1
 %global punycode_patch 0
@@ -46,18 +52,22 @@
 %global npm_epoch 1
 %global npm_major 6
 %global npm_minor 14
-%global npm_patch 4
+%global npm_patch 6
 %global npm_version %{npm_major}.%{npm_minor}.%{npm_patch}
+%global uvwasi_major 0
+%global uvwasi_minor 0
+%global uvwasi_patch 9
+%global uvwasi_version %{uvwasi_major}.%{uvwasi_minor}.%{uvwasi_patch}
+%global histogram_major 0
+%global histogram_minor 9
+%global histogram_patch 7
+%global histogram_version %{histogram_major}.%{histogram_minor}.%{histogram_patch}
 %global npm_release %{nodejs_epoch}.%{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}.%{nodejs_release}
-%global brotli_major 1
-%global brotli_minor 0
-%global brotli_patch 7
-%global brotli_version %{brotli_major}.%{brotli_minor}.%{brotli_patch}
 
 Name: nodejs
 Epoch: %{nodejs_epoch}
 Version: %{nodejs_version}
-Release: %{nodejs_release}
+Release: %{nodejs_release}%{?dist}
 Summary: JavaScript runtime
 License: MIT and ASL 2.0 and ISC and BSD
 Group: Development/Languages
@@ -69,13 +79,20 @@ Source2: btest402.js
 Source3: https://github.com/unicode-org/icu/releases/download/release-%{icu_major}-%{icu_minor}/icu4c-%{icu_major}_%{icu_minor}-src.tgz
 Source7: nodejs_native.attr
 
-Patch1: 0001-Disable-running-gyp-on-shared-deps.patch
-Patch2: 0002-Install-both-binaries-and-use-libdir.patch
-Patch3: 0003-build-auto-load-ICU-data-from-with-icu-default-data-.patch
-Patch4: 0004-src-avoid-OOB-read-in-URL-parser.patch
+Patch0001: 0001-Disable-running-gyp-on-shared-deps.patch
+Patch0002: 0002-Install-both-binaries-and-use-libdir.patch
+%ifarch aarch64
+Patch0003: 0003-Modify-openEuler-aarch64-v8_os_page_size-to-64.patch
+%endif
 
-BuildRequires: python2-devel python3-devel zlib-devel gcc >= 6.3.0
-BuildRequires: gcc-c++ >= 6.3.0 nodejs-packaging chrpath libatomic
+BuildRequires: python3-devel
+BuildRequires: zlib-devel
+BuildRequires: brotli-devel
+BuildRequires: gcc >= 6.3.0
+BuildRequires: gcc-c++ >= 6.3.0
+BuildRequires: nodejs-packaging
+BuildRequires: chrpath
+BuildRequires: libatomic
 
 %if %{with bootstrap}
 Provides: bundled(http-parser) = %{http_parser_version}
@@ -87,11 +104,12 @@ BuildRequires: libuv-devel >= 1:%{libuv_version}
 Requires: libuv >= 1:%{libuv_version}
 BuildRequires: libnghttp2-devel >= %{nghttp2_version}
 Requires: libnghttp2 >= %{nghttp2_version}
-BuildRequires: http-parser-devel >= %{http_parser_version}
-Requires: http-parser >= %{http_parser_version}
+Provides: bundled(http-parser) = %{http_parser_version}
+Provides: bundled(llhttp) = %{llhttp_version}
 %endif
 
-BuildRequires: openssl-devel
+BuildRequires: openssl-devel >= %{openssl_minimum}
+Requires: openssl >= %{openssl_minimum}
 Requires: ca-certificates
 Requires: nodejs-libs%{?_isa} = %{nodejs_epoch}:%{version}-%{release}
 Recommends: nodejs-full-i18n%{?_isa} = %{nodejs_epoch}:%{version}-%{release}
@@ -106,9 +124,10 @@ Provides: npm(punycode) = %{punycode_version}
 Provides: bundled(c-ares) = %{c_ares_version}
 Provides: bundled(v8) = %{v8_version}
 Provides: bundled(icu) = %{icu_version}
+Provides: bundled(uvwasi) = %{uvwasi_version}
+Provides: bundled(histogram) = %{histogram_version}
 Requires: (nodejs-packaging if rpm-build)
 Recommends: npm >= %{npm_epoch}:%{npm_version}-%{npm_release}%{?dist}
-Provides: bundled(brotli) = %{brotli_version}
 
 %description
 Node.js is a platform built on Chrome's JavaScript runtime
@@ -128,7 +147,6 @@ Requires: nodejs-packaging
 
 %if %{with bootstrap}
 %else
-Requires: http-parser-devel%{?_isa}
 Requires: libuv-devel%{?_isa}
 %endif
 
@@ -203,15 +221,15 @@ The API documentation for the Node.js JavaScript runtime.
 %prep
 %autosetup -p1 -n node-v%{nodejs_version}
 rm -rf deps/zlib
+rm -rf deps/brotli
 rm -rf deps/openssl
-pathfix.py -i %{__python2} -pn $(find -type f ! -name "*.js")
-find . -type f -exec sed -i "s~/usr\/bin\/env python~/usr/bin/python2~" {} \;
-find . -type f -exec sed -i "s~/usr\/bin\/python\W~/usr/bin/python2~" {} \;
-sed -i "s~python~python2~" $(find . -type f | grep "gyp$")
+pathfix.py -i %{__python3} -pn $(find -type f ! -name "*.js")
+find . -type f -exec sed -i "s~/usr\/bin\/env python~/usr/bin/python3~" {} \;
+find . -type f -exec sed -i "s~/usr\/bin\/python\W~/usr/bin/python3~" {} \;
+sed -i "s~python~python3~" $(find . -type f | grep "gyp$")
 sed -i "s~usr\/bin\/python2~usr\/bin\/python3~" ./deps/v8/tools/gen-inlining-tests.py
-sed -i "s~usr\/bin\/python.*$~usr\/bin\/python2~" ./deps/v8/tools/mb/mb_unittest.py
-find . -type f -exec sed -i "s~python -c~python2 -c~" {} \;
-sed -i "s~which('python')~which('python2')~" configure
+sed -i "s~usr\/bin\/python.*$~usr\/bin\/python3~" ./deps/v8/tools/mb/mb_unittest.py
+find . -type f -exec sed -i "s~python -c~python3 -c~" {} \;
 
 %build
 %define _lto_cflags %{nil}
@@ -238,23 +256,24 @@ export CXXFLAGS="$(echo ${CXXFLAGS} | tr '\n\\' '  ')"
 export LDFLAGS="%{build_ldflags}"
 
 %if %{with bootstrap}
-./configure --prefix=%{_prefix} \
+%{__python3} configure.py --prefix=%{_prefix} \
            --shared \
            --libdir=%{_lib} \
            --shared-openssl \
            --shared-zlib \
+           --shared-brotli \
            --without-dtrace \
            --with-intl=small-icu \
            --debug-nghttp2 \
            --openssl-use-def-ca-store
 %else
-./configure --prefix=%{_prefix} \
+%{__python3} configure.py --prefix=%{_prefix} \
            --shared \
            --libdir=%{_lib} \
            --shared-openssl \
            --shared-zlib \
+           --shared-brotli \
            --shared-libuv \
-           --shared-http-parser \
            --shared-nghttp2 \
            --with-dtrace \
            --with-intl=small-icu \
@@ -264,8 +283,10 @@ export LDFLAGS="%{build_ldflags}"
 %endif
 
 make BUILDTYPE=Release %{?_smp_mflags}
+
 pushd deps/
 tar xfz %SOURCE3
+
 pushd icu/source
 mkdir -p converted
 %if 0%{?little_endian}
@@ -279,15 +300,18 @@ LD_LIBRARY_PATH=./lib ./bin/icupkg -tb data/in/icudt%{icu_major}l.dat \
                                        converted/icudt%{icu_major}b.dat
 %endif
 
-popd # icu/source
-popd # deps
+popd
+popd
 
 %install
 rm -rf %{buildroot}
+
 ./tools/install.py install %{buildroot} %{_prefix}
+
 chmod 0755 %{buildroot}/%{_bindir}/node
 chrpath --delete %{buildroot}%{_bindir}/node
 ln -s libnode.so.%{nodejs_soversion} %{buildroot}%{_libdir}/libnode.so
+
 for header in %{buildroot}%{_includedir}/node/libplatform %{buildroot}%{_includedir}/node/v8*.h; do
     header=$(basename ${header})
     ln -s %{_includedir}/node/${header} %{buildroot}%{_includedir}/${header}
@@ -296,7 +320,9 @@ for soname in libv8 libv8_libbase libv8_libplatform; do
     ln -s libnode.so.%{nodejs_soversion} %{buildroot}%{_libdir}/${soname}.so
     ln -s libnode.so.%{nodejs_soversion} %{buildroot}%{_libdir}/${soname}.so.%{v8_major}
 done
+
 mkdir -p %{buildroot}%{_prefix}/lib/node_modules
+
 install -Dpm0644 %{SOURCE7} %{buildroot}%{_rpmconfigdir}/fileattrs/nodejs_native.attr
 cat << EOF > %{buildroot}%{_rpmconfigdir}/nodejs_native.req
 #!/bin/sh
@@ -304,49 +330,56 @@ echo 'nodejs(abi%{nodejs_major}) >= %nodejs_abi'
 echo 'nodejs(v8-abi%{v8_major}) >= %v8_abi'
 EOF
 chmod 0755 %{buildroot}%{_rpmconfigdir}/nodejs_native.req
+
 mkdir -p %{buildroot}%{_pkgdocdir}/html
 cp -pr doc/* %{buildroot}%{_pkgdocdir}/html
 rm -f %{buildroot}%{_pkgdocdir}/html/nodejs.1
+
 mkdir -p %{buildroot}%{_datadir}/node
 cp -p common.gypi %{buildroot}%{_datadir}/node
+
 mv %{buildroot}/%{_datadir}/doc/node/gdbinit %{buildroot}/%{_pkgdocdir}/gdbinit
+
 mkdir -p %{buildroot}%{_mandir} \
          %{buildroot}%{_pkgdocdir}/npm
 
 cp -pr deps/npm/man/* %{buildroot}%{_mandir}/
 rm -rf %{buildroot}%{_prefix}/lib/node_modules/npm/man
 ln -sf %{_mandir}  %{buildroot}%{_prefix}/lib/node_modules/npm/man
+
 cp -pr deps/npm/docs %{buildroot}%{_pkgdocdir}/npm/
 rm -rf %{buildroot}%{_prefix}/lib/node_modules/npm/docs
+
 ln -sf %{_pkgdocdir}/npm %{buildroot}%{_prefix}/lib/node_modules/npm/docs
+
 rm -f %{buildroot}/%{_defaultdocdir}/node/lldb_commands.py \
       %{buildroot}/%{_defaultdocdir}/node/lldbinit
+
 find %{buildroot}%{_prefix}/lib/node_modules/npm \
     -not -path "%{buildroot}%{_prefix}/lib/node_modules/npm/bin/*" \
     -executable -type f \
     -exec chmod -x {} \;
+
 chmod 0755 %{buildroot}%{_prefix}/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin/node-gyp
 chmod 0755 %{buildroot}%{_prefix}/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js
+
 mkdir -p %{buildroot}%{_sysconfdir}
 cp %{SOURCE1} %{buildroot}%{_sysconfdir}/npmrc
+
 mkdir -p %{buildroot}%{_prefix}/etc
 ln -s %{_sysconfdir}/npmrc %{buildroot}%{_prefix}/etc/npmrc
+
 install -Dpm0644 -t %{buildroot}%{icudatadir} deps/icu/source/converted/*
 
 %check
 LD_LIBRARY_PATH=%{buildroot}%{_libdir} %{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.node, '%{nodejs_version}')"
 LD_LIBRARY_PATH=%{buildroot}%{_libdir} %{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.v8.replace(/-node\.\d+$/, ''), '%{v8_version}')"
 LD_LIBRARY_PATH=%{buildroot}%{_libdir} %{buildroot}/%{_bindir}/node -e "require('assert').equal(process.versions.ares.replace(/-DEV$/, ''), '%{c_ares_version}')"
-
 LD_LIBRARY_PATH=%{buildroot}%{_libdir} %{buildroot}/%{_bindir}/node -e "require(\"assert\").equal(require(\"punycode\").version, '%{punycode_version}')"
-
 NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules:%{buildroot}%{_prefix}/lib/node_modules/npm/node_modules LD_LIBRARY_PATH=%{buildroot}%{_libdir} %{buildroot}/%{_bindir}/node -e "require(\"assert\").equal(require(\"npm\").version, '%{npm_version}')"
-
 NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules:%{buildroot}%{_prefix}/lib/node_modules/npm/node_modules LD_LIBRARY_PATH=%{buildroot}%{_libdir} %{buildroot}/%{_bindir}/node --icu-data-dir=%{buildroot}%{icudatadir} %{SOURCE2}
 
 %pretrans -n npm -p <lua>
--- Replace the npm man directory with a symlink
--- Drop this scriptlet when F31 is EOL
 path = "%{_prefix}/lib/node_modules/npm/man"
 st = posix.stat(path)
 if st and st.type == "directory" then
@@ -362,8 +395,6 @@ if st and st.type == "directory" then
 end
 
 %pretrans -n v8-devel -p <lua>
--- Replace the v8 libplatform include directory with a symlink
--- Drop this scriptlet when F30 is EOL
 path = "%{_includedir}/libplatform"
 st = posix.stat(path)
 if st and st.type == "directory" then
@@ -394,7 +425,7 @@ end
 
 %{_rpmconfigdir}/fileattrs/nodejs_native.attr
 %{_rpmconfigdir}/nodejs_native.req
-%doc AUTHORS CHANGELOG.md COLLABORATOR_GUIDE.md GOVERNANCE.md README.md
+%doc AUTHORS CHANGELOG.md onboarding.md GOVERNANCE.md README.md
 %doc %{_mandir}/man1/node.1*
 
 %files devel
@@ -454,8 +485,10 @@ end
 %{_pkgdocdir}/html
 %{_pkgdocdir}/npm/docs
 
-
 %changelog
+* Wed Nov 18 2020 lingsheng <lingsheng@huawei.com> - 1:12.18.4-1
+- Update to 12.18.4
+
 * Tue Nov 17 2020 lingsheng <lingsheng@huawei.com> - 1:10.21.0-3
 - Fix nodejs release version
 
