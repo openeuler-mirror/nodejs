@@ -1,5 +1,5 @@
 %bcond_with bootstrap
-%global baserelease 1
+%global baserelease 2
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global nodejs_epoch 1
 %global nodejs_major 10
@@ -90,6 +90,7 @@ BuildRequires: http-parser-devel >= %{http_parser_version}
 Requires: http-parser >= %{http_parser_version}
 %endif
 
+
 BuildRequires: openssl-devel
 Requires: ca-certificates
 Requires: nodejs-libs%{?_isa} = %{nodejs_epoch}:%{version}-%{release}
@@ -108,6 +109,8 @@ Provides: bundled(icu) = %{icu_version}
 Requires: (nodejs-packaging if rpm-build)
 Recommends: npm >= %{npm_epoch}:%{npm_version}-%{npm_release}%{?dist}
 Provides: bundled(brotli) = %{brotli_version}
+Provides: %{name}-help = %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
+Obsoletes: %{name}-help < %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 
 %description
 Node.js is a platform built on Chrome's JavaScript runtime
@@ -193,8 +196,11 @@ Summary: Node.js API documentation
 Group: Documentation
 BuildArch: noarch
 
+Provides: %{name}-help = %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
+Obsoletes: %{name}-help < %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 Conflicts: %{name} > %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 Conflicts: %{name} < %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
+
 
 %description docs
 The API documentation for the Node.js JavaScript runtime.
@@ -455,6 +461,9 @@ end
 
 
 %changelog
+* Sat Nov 28 2020 wutao <wutao61@huawei.com> - 1:10.21.0-2
+- fix conflicts between help and docs packages
+
 * Thu Nov 12 2020 Jeffery.Gao <gaojianxing@huawei.com> - 1:10.21.0-1
 - Update to 10.21.0
 
