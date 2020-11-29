@@ -1,5 +1,5 @@
 %bcond_with bootstrap
-%global baserelease 2
+%global baserelease 3
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global nodejs_epoch 1
 %global nodejs_major 10
@@ -109,6 +109,8 @@ Provides: bundled(icu) = %{icu_version}
 Requires: (nodejs-packaging if rpm-build)
 Recommends: npm >= %{npm_epoch}:%{npm_version}-%{npm_release}%{?dist}
 Provides: bundled(brotli) = %{brotli_version}
+Provides: %{name}-help = %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
+Obsoletes: %{name}-help < %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 
 %description
 Node.js is a platform built on Chrome's JavaScript runtime
@@ -194,6 +196,8 @@ Summary: Node.js API documentation
 Group: Documentation
 BuildArch: noarch
 
+Provides: %{name}-help = %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
+Obsoletes: %{name}-help < %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 Conflicts: %{name} > %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 Conflicts: %{name} < %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 
@@ -456,6 +460,9 @@ end
 
 
 %changelog
+* Sat Nov 28 2020 wutao <wutao61@huawei.com> 1:10.21.0-3
+- fix conflicts between help and docs packages
+
 * Wed Nov 04 2020 gaozhekang <gaozhekang@huawei.com> - 1:10.21.0-2
 - avoid OOB read in URL parser
 
