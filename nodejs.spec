@@ -1,5 +1,5 @@
 %bcond_with bootstrap
-%global baserelease 3
+%global baserelease 4
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global nodejs_epoch 1
 %global nodejs_major 10
@@ -73,6 +73,7 @@ Patch1: 0001-Disable-running-gyp-on-shared-deps.patch
 Patch2: 0002-Install-both-binaries-and-use-libdir.patch
 Patch3: 0003-build-auto-load-ICU-data-from-with-icu-default-data-.patch
 Patch4: 0004-src-avoid-OOB-read-in-URL-parser.patch
+Patch5: CVE-2020-8252.patch
 
 BuildRequires: python2-devel python3-devel zlib-devel gcc >= 6.3.0
 BuildRequires: gcc-c++ >= 6.3.0 nodejs-packaging chrpath libatomic
@@ -460,6 +461,9 @@ end
 
 
 %changelog
+* Tue Dec 6 2020 wangxiao <wangxiao65@huawei.com> 1:10.21.0-4
+- fix CVE-2020-8252
+
 * Sat Nov 28 2020 wutao <wutao61@huawei.com> 1:10.21.0-3
 - fix conflicts between help and docs packages
 
