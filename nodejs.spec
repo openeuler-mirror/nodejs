@@ -1,5 +1,5 @@
 %bcond_with bootstrap
-%global baserelease 1
+%global baserelease 2
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global nodejs_epoch 1
 %global nodejs_major 12
@@ -67,7 +67,7 @@
 Name: nodejs
 Epoch: %{nodejs_epoch}
 Version: %{nodejs_version}
-Release: %{nodejs_release}%{?dist}
+Release: %{nodejs_release}
 Summary: JavaScript runtime
 License: MIT and ASL 2.0 and ISC and BSD
 Group: Development/Languages
@@ -84,7 +84,7 @@ Patch0002: 0002-Install-both-binaries-and-use-libdir.patch
 %ifarch aarch64
 Patch0003: 0003-Modify-openEuler-aarch64-v8_os_page_size-to-64.patch
 %endif
-
+Patch0004: 0004-Make-AARCH64-compile-on-64KB-physical-pages.patch
 BuildRequires: python3-devel
 BuildRequires: zlib-devel
 BuildRequires: brotli-devel
@@ -486,6 +486,9 @@ end
 %{_pkgdocdir}/npm/docs
 
 %changelog
+* Mon Jan 04 2020 huanghaitao <huanghaitao8@huawei.com> - 1:12.18.4-2
+- Make AARCH64 compile on 64KB physical pages to fix build error
+
 * Wed Nov 18 2020 lingsheng <lingsheng@huawei.com> - 1:12.18.4-1
 - Update to 12.18.4
 
