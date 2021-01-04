@@ -1,0 +1,25 @@
+From 8a189060f6e5f969fc331f4531f31c319d654639 Mon Sep 17 00:00:00 2001
+From: hht8 <huanghaitao12138@163.com>
+Date: Mon, 4 Jan 2021 09:14:35 +0800
+Subject: [PATCH] Make AARCH64 compile on 64KB physical pages
+
+---
+ deps/v8/src/base/build_config.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/deps/v8/src/base/build_config.h b/deps/v8/src/base/build_config.h
+index f430082..098e36f 100644
+--- a/deps/v8/src/base/build_config.h
++++ b/deps/v8/src/base/build_config.h
+@@ -202,7 +202,7 @@
+ #endif
+ 
+ // Number of bits to represent the page size for paged spaces.
+-#if defined(V8_TARGET_ARCH_PPC) || defined(V8_TARGET_ARCH_PPC64)
++#if defined(V8_TARGET_ARCH_PPC) || defined(V8_TARGET_ARCH_PPC64) || defined(V8_TARGET_ARCH_ARM64)
+ // PPC has large (64KB) physical pages.
+ const int kPageSizeBits = 19;
+ #else
+-- 
+2.23.0
+
