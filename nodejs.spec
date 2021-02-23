@@ -1,5 +1,5 @@
 %bcond_with bootstrap
-%global baserelease 4
+%global baserelease 5
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global nodejs_epoch 1
 %global nodejs_major 10
@@ -74,6 +74,8 @@ Patch2: 0002-Install-both-binaries-and-use-libdir.patch
 Patch3: 0003-build-auto-load-ICU-data-from-with-icu-default-data-.patch
 Patch4: 0004-src-avoid-OOB-read-in-URL-parser.patch
 Patch5: CVE-2020-8252.patch
+Patch6: CVE-2020-8265.patch
+Patch7: CVE-2020-8287.patch
 
 BuildRequires: python2-devel python3-devel zlib-devel gcc >= 6.3.0
 BuildRequires: gcc-c++ >= 6.3.0 nodejs-packaging chrpath libatomic
@@ -461,6 +463,9 @@ end
 
 
 %changelog
+* Fri Feb 5 2021 xinghe <xinghe1@huawei.com> 1:10.21.0-5
+- fix CVE-2020-8265 CVE-2020-8287
+
 * Mon Dec 14 2020 wangxiao <wangxiao65@huawei.com> 1:10.21.0-4
 - fix CVE-2020-8252
 
