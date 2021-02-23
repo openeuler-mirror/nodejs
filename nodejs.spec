@@ -1,5 +1,5 @@
 %bcond_with bootstrap
-%global baserelease 2
+%global baserelease 3
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global nodejs_epoch 1
 %global nodejs_major 12
@@ -85,6 +85,10 @@ Patch0002: 0002-Install-both-binaries-and-use-libdir.patch
 Patch0003: 0003-Modify-openEuler-aarch64-v8_os_page_size-to-64.patch
 %endif
 Patch0004: 0004-Make-AARCH64-compile-on-64KB-physical-pages.patch
+Patch0005: CVE-2020-8265.patch
+Patch0006: CVE-2020-8287-1.patch
+Patch0007: CVE-2020-8287-2.patch
+
 BuildRequires: python3-devel
 BuildRequires: zlib-devel
 BuildRequires: brotli-devel
@@ -486,6 +490,9 @@ end
 %{_pkgdocdir}/npm/docs
 
 %changelog
+* Tue Feb 09 2021 xinghe <xinghe1@huawei.com> - 1:12.18.4-3
+- fix CVE-2020-8265 CVE-2020-8287
+
 * Mon Jan 04 2020 huanghaitao <huanghaitao8@huawei.com> - 1:12.18.4-2
 - Make AARCH64 compile on 64KB physical pages to fix build error
 
