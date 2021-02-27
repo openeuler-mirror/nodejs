@@ -1,5 +1,5 @@
 %bcond_with bootstrap
-%global baserelease 5
+%global baserelease 6
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global nodejs_epoch 1
 %global nodejs_major 10
@@ -172,7 +172,7 @@ package to save space if non-English locales are not needed.
 Summary: v8 - development headers
 Epoch: %{v8_epoch}
 Version: %{v8_version}
-Release: %{v8_release}%{?dist}
+Release: %{v8_release}
 Requires: %{name}-devel%{?_isa} = %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 
 %description -n v8-devel
@@ -182,7 +182,7 @@ Development headers for the v8 runtime.
 Summary: Node.js Package Manager
 Epoch: %{npm_epoch}
 Version: %{npm_version}
-Release: %{npm_release}%{?dist}
+Release: %{npm_release}
 
 Obsoletes: npm < 0:3.5.4-6
 Provides: npm = %{npm_epoch}:%{npm_version}
@@ -463,6 +463,9 @@ end
 
 
 %changelog
+* Sat Feb 27 2021 xinghe <xinghe1@huawei.com> 1:10.21.0-6
+- remove error dist
+
 * Fri Feb 5 2021 xinghe <xinghe1@huawei.com> 1:10.21.0-5
 - fix CVE-2020-8265 CVE-2020-8287
 
