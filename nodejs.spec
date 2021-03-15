@@ -1,5 +1,5 @@
 %bcond_with bootstrap
-%global baserelease 5
+%global baserelease 6
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global nodejs_epoch 1
 %global nodejs_major 10
@@ -76,6 +76,8 @@ Patch4: 0004-src-avoid-OOB-read-in-URL-parser.patch
 Patch5: CVE-2020-8252.patch
 Patch6: CVE-2020-8265.patch
 Patch7: CVE-2020-8287.patch
+Patch8: CVE-2021-22883.patch
+Patch9: CVE-2021-22884.patch
 
 BuildRequires: python2-devel python3-devel zlib-devel gcc >= 6.3.0
 BuildRequires: gcc-c++ >= 6.3.0 nodejs-packaging chrpath libatomic
@@ -463,6 +465,9 @@ end
 
 
 %changelog
+* Mon Mar 15 2021 xinghe <xinghe1@huawei.com> 1:10.21.0-6
+- fix CVE-2021-22883 CVE-2021-22884
+
 * Fri Feb 5 2021 xinghe <xinghe1@huawei.com> 1:10.21.0-5
 - fix CVE-2020-8265 CVE-2020-8287
 
