@@ -6,7 +6,7 @@
 %global nodejs_patch 0
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
-%global nodejs_release 6
+%global nodejs_release 7
 
 %global v8_major 6
 %global v8_minor 8
@@ -49,6 +49,8 @@ Patch0007: src-avoid-OOB-read-in-URL-parser.patch
 Patch0008: CVE-2020-8174.patch
 Patch0009: CVE-2020-8265.patch
 Patch0010: CVE-2020-8287.patch
+Patch0011: CVE-2021-22883.patch
+Patch0012: CVE-2021-22884.patch
 
 BuildRequires: gcc gcc-c++ openssl-devel
 BuildRequires: http-parser-devel
@@ -225,6 +227,9 @@ NODE_PATH=%{buildroot}%{_prefix}/lib/node_modules:%{buildroot}%{_prefix}/lib/nod
 %doc %{_mandir}/man1/node.1*
 
 %changelog
+* Mon Mar 15 2021 xinghe <xinghe1@huawei.com> - 1:10.11.0-7
+- fix CVE-2021-22883 CVE-2021-22884
+
 * Thu Feb 04 2021 xinghe <xinghe1@huawei.com> - 1:10.11.0-6
 - fix CVE-2020-8174 CVE-2020-8265 CVE-2020-8287
 
