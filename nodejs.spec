@@ -1,5 +1,5 @@
 %bcond_with bootstrap
-%global baserelease 6
+%global baserelease 7
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global nodejs_epoch 1
 %global nodejs_major 10
@@ -465,8 +465,11 @@ end
 
 
 %changelog
-* Mon Mar 15 2021 xinghe <xinghe1@huawei.com> 1:10.21.0-6
+* Mon Mar 15 2021 xinghe <xinghe1@huawei.com> 1:10.21.0-7
 - fix CVE-2021-22883 CVE-2021-22884
+
+* Sat Feb 27 2021 xinghe <xinghe1@huawei.com> 1:10.21.0-6
+- remove error dist
 
 * Fri Feb 5 2021 xinghe <xinghe1@huawei.com> 1:10.21.0-5
 - fix CVE-2020-8265 CVE-2020-8287
