@@ -1,5 +1,5 @@
 %bcond_with bootstrap
-%global baserelease 3
+%global baserelease 4
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global nodejs_epoch 1
 %global nodejs_major 12
@@ -88,6 +88,8 @@ Patch0004: 0004-Make-AARCH64-compile-on-64KB-physical-pages.patch
 Patch0005: CVE-2020-8265.patch
 Patch0006: CVE-2020-8287-1.patch
 Patch0007: CVE-2020-8287-2.patch
+Patch0008: CVE-2021-22883.patch
+Patch0009: CVE-2021-22884.patch
 
 BuildRequires: python3-devel
 BuildRequires: zlib-devel
@@ -490,6 +492,9 @@ end
 %{_pkgdocdir}/npm/docs
 
 %changelog
+* Mon Mar 15 2021 xinghe <xinghe1@huawei.com> - 1:12.18.4-4
+- fix CVE-2021-22883 CVE-2021-22884
+
 * Tue Feb 09 2021 xinghe <xinghe1@huawei.com> - 1:12.18.4-3
 - fix CVE-2020-8265 CVE-2020-8287
 
