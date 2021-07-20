@@ -1,5 +1,5 @@
 %bcond_with bootstrap
-%global baserelease 4
+%global baserelease 5
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global nodejs_epoch 1
 %global nodejs_major 12
@@ -90,6 +90,7 @@ Patch0006: CVE-2020-8287-1.patch
 Patch0007: CVE-2020-8287-2.patch
 Patch0008: CVE-2021-22883.patch
 Patch0009: CVE-2021-22884.patch
+Patch00010: CVE-2021-22918.patch
 
 BuildRequires: python3-devel
 BuildRequires: zlib-devel
@@ -492,6 +493,9 @@ end
 %{_pkgdocdir}/npm/docs
 
 %changelog
+* Thu Jul 20 2021 zhouwenpei <zhouwenpei1@huawei.com> - 1:12.18.4-5
+- fix CVE-2021-22918
+
 * Mon Mar 15 2021 xinghe <xinghe1@huawei.com> - 1:12.18.4-4
 - fix CVE-2021-22883 CVE-2021-22884
 
