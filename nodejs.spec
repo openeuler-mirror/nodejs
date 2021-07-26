@@ -1,5 +1,5 @@
 %bcond_with bootstrap
-%global baserelease 8
+%global baserelease 9
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global nodejs_epoch 1
 %global nodejs_major 10
@@ -466,6 +466,9 @@ end
 
 
 %changelog
+* Mon Jul 26 2021 zhouwenpei <zhouwenpei11@huawei.com> 1:10.21.0-9
+- modified the patch description
+
 * Mon Jul 19 2021 zhouwenpei <zhouwenpei11@huawei.com> 1:10.21.0-8
 - fix CVE-2021-22918
 
