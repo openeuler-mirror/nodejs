@@ -1,5 +1,5 @@
 %bcond_with bootstrap
-%global baserelease 5
+%global baserelease 6
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global nodejs_epoch 1
 %global nodejs_major 12
@@ -91,6 +91,7 @@ Patch0007: CVE-2020-8287-2.patch
 Patch0008: CVE-2021-22883.patch
 Patch0009: CVE-2021-22884.patch
 Patch00010: CVE-2021-22918.patch
+Patch00011: 0005-use-getauxval-in-node_main_cc.patch
 
 BuildRequires: python3-devel
 BuildRequires: zlib-devel
@@ -493,6 +494,9 @@ end
 %{_pkgdocdir}/npm/docs
 
 %changelog
+* Mon Aug 16 2021 zhouwenpei <zhouwenpei1@huawei.com> - 1:12.18.4-6
+- use getauxval to fix build failure in node_main.cc
+
 * Thu Jul 20 2021 zhouwenpei <zhouwenpei1@huawei.com> - 1:12.18.4-5
 - fix CVE-2021-22918
 
