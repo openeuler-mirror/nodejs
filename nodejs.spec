@@ -1,10 +1,10 @@
 %bcond_with bootstrap/
-%global baserelease 8
+%global baserelease 1
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global nodejs_epoch 1
 %global nodejs_major 12
-%global nodejs_minor 18
-%global nodejs_patch 4
+%global nodejs_minor 22
+%global nodejs_patch 11
 %global nodejs_abi %{nodejs_major}.%{nodejs_minor}
 %global nodejs_soversion 72
 %global nodejs_version %{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}
@@ -19,19 +19,19 @@
 %global v8_version %{v8_major}.%{v8_minor}.%{v8_build}.%{v8_patch}
 %global v8_release %{nodejs_epoch}.%{nodejs_major}.%{nodejs_minor}.%{nodejs_patch}.%{nodejs_release}
 %global c_ares_major 1
-%global c_ares_minor 16
-%global c_ares_patch 0
+%global c_ares_minor 18
+%global c_ares_patch 1
 %global c_ares_version %{c_ares_major}.%{c_ares_minor}.%{c_ares_patch}
 %global http_parser_major 2
 %global http_parser_minor 9
-%global http_parser_patch 3
+%global http_parser_patch 4
 %global http_parser_version %{http_parser_major}.%{http_parser_minor}.%{http_parser_patch}
 %global llhttp_major 2
 %global llhttp_minor 1
-%global llhttp_patch 2
+%global llhttp_patch 4
 %global llhttp_version %{llhttp_major}.%{llhttp_minor}.%{llhttp_patch}
 %global libuv_major 1
-%global libuv_minor 38
+%global libuv_minor 40
 %global libuv_patch 0
 %global libuv_version %{libuv_major}.%{libuv_minor}.%{libuv_patch}
 %global nghttp2_major 1
@@ -52,11 +52,11 @@
 %global npm_epoch 1
 %global npm_major 6
 %global npm_minor 14
-%global npm_patch 6
+%global npm_patch 16
 %global npm_version %{npm_major}.%{npm_minor}.%{npm_patch}
 %global uvwasi_major 0
 %global uvwasi_minor 0
-%global uvwasi_patch 9
+%global uvwasi_patch 11
 %global uvwasi_version %{uvwasi_major}.%{uvwasi_minor}.%{uvwasi_patch}
 %global histogram_major 0
 %global histogram_minor 9
@@ -82,16 +82,7 @@ Source7: nodejs_native.attr
 Patch0001: 0001-Disable-running-gyp-on-shared-deps.patch
 Patch0002: 0002-Install-both-binaries-and-use-libdir.patch
 Patch0003: 0004-Make-AARCH64-compile-on-64KB-physical-pages.patch
-Patch0004: CVE-2020-8265.patch
-Patch0005: CVE-2020-8287-1.patch
-Patch0006: CVE-2020-8287-2.patch
-Patch0007: CVE-2021-22883.patch
-Patch0008: CVE-2021-22884.patch
-Patch0009: CVE-2021-22918.patch
 Patch00010: 0005-use-getauxval-in-node_main_cc.patch
-Patch00011: CVE-2021-22930-1.patch
-Patch00012: CVE-2021-22930-2.patch
-Patch00013: CVE-2021-22930-3.patch
 
 BuildRequires: python3-devel
 BuildRequires: zlib-devel
@@ -494,6 +485,9 @@ end
 %{_pkgdocdir}/npm/docs
 
 %changelog
+* Wed Mar 23 2022 Liu Zixian <liuzixian4@huawei.com> - 1:12.22.11-1
+- Update to 12.22.11, fix some CVEs
+
 * Thu Mar 03 2022 xu_ping <xuping33@huawei.com> - 1:12.18.4-8
 - openEuler 22.03 changed the page table to 4k so remove the 0003-Modify-openEuler-aarch64-v8_os_page_size-to-64.patch
 
@@ -503,7 +497,7 @@ end
 * Mon Aug 16 2021 zhouwenpei <zhouwenpei1@huawei.com> - 1:12.18.4-6
 - use getauxval to fix build failure in node_main.cc
 
-* Thu Jul 20 2021 zhouwenpei <zhouwenpei1@huawei.com> - 1:12.18.4-5
+* Tue Jul 20 2021 zhouwenpei <zhouwenpei1@huawei.com> - 1:12.18.4-5
 - fix CVE-2021-22918
 
 * Mon Mar 15 2021 xinghe <xinghe1@huawei.com> - 1:12.18.4-4
@@ -512,7 +506,7 @@ end
 * Tue Feb 09 2021 xinghe <xinghe1@huawei.com> - 1:12.18.4-3
 - fix CVE-2020-8265 CVE-2020-8287
 
-* Mon Jan 04 2020 huanghaitao <huanghaitao8@huawei.com> - 1:12.18.4-2
+* Sat Jan 04 2020 huanghaitao <huanghaitao8@huawei.com> - 1:12.18.4-2
 - Make AARCH64 compile on 64KB physical pages to fix build error
 
 * Wed Nov 18 2020 lingsheng <lingsheng@huawei.com> - 1:12.18.4-1
