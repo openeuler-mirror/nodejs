@@ -1,5 +1,5 @@
 %bcond_with bootstrap/
-%global baserelease 1
+%global baserelease 2
 %{?!_pkgdocdir:%global _pkgdocdir %{_docdir}/%{name}-%{version}}
 %global nodejs_epoch 1
 %global nodejs_major 12
@@ -184,7 +184,7 @@ package to save space if non-English locales are not needed.
 Summary: v8 - development headers
 Epoch: %{v8_epoch}
 Version: %{v8_version}
-Release: %{v8_release}%{?dist}
+Release: %{v8_release}
 Requires: %{name}-devel%{?_isa} = %{nodejs_epoch}:%{nodejs_version}-%{nodejs_release}%{?dist}
 
 %description -n v8-devel
@@ -194,7 +194,7 @@ Development headers for the v8 runtime.
 Summary: Node.js Package Manager
 Epoch: %{npm_epoch}
 Version: %{npm_version}
-Release: %{npm_release}%{?dist}
+Release: %{npm_release}
 
 Obsoletes: npm < 0:3.5.4-6
 Provides: npm = %{npm_epoch}:%{npm_version}
@@ -485,6 +485,9 @@ end
 %{_pkgdocdir}/npm/docs
 
 %changelog
+* Thu Mar 24 2022 wulei <wulei80@huawei.com> - 1:12.22.11-2
+- Dist is controlled by the version project, dist is deleted
+
 * Wed Mar 23 2022 Liu Zixian <liuzixian4@huawei.com> - 1:12.22.11-1
 - Update to 12.22.11, fix some CVEs
 
