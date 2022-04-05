@@ -11,15 +11,15 @@ diff --git a/deps/v8/src/base/build_config.h b/deps/v8/src/base/build_config.h
 index f430082..098e36f 100644
 --- a/deps/v8/src/base/build_config.h
 +++ b/deps/v8/src/base/build_config.h
-@@ -202,7 +202,7 @@
- #endif
+@@ -227,7 +227,7 @@
+     V8_TARGET_ARCH_STORES_RETURN_ADDRESS_ON_STACK ? 1 : 0;
  
  // Number of bits to represent the page size for paged spaces.
 -#if defined(V8_TARGET_ARCH_PPC) || defined(V8_TARGET_ARCH_PPC64)
 +#if defined(V8_TARGET_ARCH_PPC) || defined(V8_TARGET_ARCH_PPC64) || defined(V8_TARGET_ARCH_ARM64)
  // PPC has large (64KB) physical pages.
  const int kPageSizeBits = 19;
- #else
+ #elif defined(ENABLE_HUGEPAGE)
 -- 
 2.23.0
 
